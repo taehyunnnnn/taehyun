@@ -1,3 +1,105 @@
+
+// Projects: character scramble on scroll-in
+(function () {
+  const rows = document.querySelectorAll('.project-row');
+  if (!rows.length) return;
+
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!?#%&*';
+
+  function scramble(el, final, delay) {
+    const len = final.length;
+    let frame = 0;
+    const resolve = len * 2;
+    setTimeout(() => {
+      const iv = setInterval(() => {
+        let out = '';
+        const done = Math.floor(frame / 2);
+        for (let i = 0; i < len; i++) {
+          if (final[i] === ' ') { out += ' '; continue; }
+          out += i < done ? final[i] : chars[Math.floor(Math.random() * chars.length)];
+        }
+        el.textContent = out;
+        if (++frame > resolve + 2) { el.textContent = final; clearInterval(iv); }
+      }, 20);
+    }, delay);
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    if (!entries[0].isIntersecting) return;
+    rows.forEach((row, i) => {
+      const nameEl = row.querySelector('.project-name');
+      if (nameEl) scramble(nameEl, nameEl.textContent.trim(), i * 140);
+    });
+    observer.disconnect();
+  }, { threshold: 0.15 });
+
+  const section = document.getElementById('projects');
+  if (section) observer.observe(section);
+}());
+
+// Airport-style real-time clock in NOW section
+(function () {
+  const el = document.getElementById('now-clock');
+  if (!el) return;
+
+  const digits = '0123456789';
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function getSegments() {
+    const d = new Date();
+    return [
+      String(d.getFullYear()),
+      pad(d.getMonth() + 1),
+      pad(d.getDate()),
+      pad(d.getHours()),
+      pad(d.getMinutes()),
+      pad(d.getSeconds()),
+    ];
+  }
+
+  // Build DOM: year · month · day · HH:MM:SS
+  const seps = [' · ', ' · ', ' · ', ':', ':'];
+  const segLengths = [4, 2, 2, 2, 2, 2];
+  let digitSpans = [[], [], [], [], [], []];
+
+  segLengths.forEach((len, si) => {
+    for (let i = 0; i < len; i++) {
+      const s = document.createElement('span');
+      s.className = 'clock-digit';
+      s.textContent = '0';
+      el.appendChild(s);
+      digitSpans[si].push(s);
+    }
+    if (si < seps.length) {
+      const sep = document.createElement('span');
+      sep.className = 'clock-sep';
+      sep.textContent = seps[si];
+      el.appendChild(sep);
+    }
+  });
+
+  function flip(span, target) {
+    let step = 0;
+    const iv = setInterval(() => {
+      span.textContent = digits[Math.floor(Math.random() * 10)];
+      if (++step >= 5) { span.textContent = target; clearInterval(iv); }
+    }, 28);
+  }
+
+  function update() {
+    const segs = getSegments();
+    segs.forEach((val, si) => {
+      Array.from(val).forEach((ch, ci) => {
+        const span = digitSpans[si][ci];
+        if (span && span.textContent !== ch) flip(span, ch);
+      });
+    });
+  }
+
+  update();
+  setInterval(update, 1000);
+}());
+
 // Active nav link on scroll
 const sections = document.querySelectorAll('section[id]');
 const navLinks = document.querySelectorAll('.nav-links a');
@@ -14,11 +116,11 @@ const observer = new IntersectionObserver((entries) => {
 
 sections.forEach(s => observer.observe(s));
 
-// Contact is at the page bottom — activate it when scrolled near the end
+// Connect is at the page bottom — activate it when scrolled near the end
 window.addEventListener('scroll', () => {
   if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 80) {
     navLinks.forEach(link => {
-      link.classList.toggle('active', link.getAttribute('href') === '#contact');
+      link.classList.toggle('active', link.getAttribute('href') === '#connect');
     });
   }
 }, { passive: true });
@@ -310,41 +412,62 @@ fadeEls.forEach(el => fadeObserver.observe(el));
   scheduleGlitch();
 }());
 
-// Conway's Game of Life — rare glider crossing content sections
+// Conway's Game of Life — patterns embedded in the page, scroll with content
 (function () {
   const CELL    = 8;
-  const STEP_MS = 60;
+  const STEP_MS = 350;
 
   const canvas = document.createElement('canvas');
-  canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50;mix-blend-mode:difference;';
+  canvas.style.cssText = 'position:absolute;top:0;left:0;width:100%;pointer-events:none;z-index:2;mix-blend-mode:difference;';
   document.body.appendChild(canvas);
   const ctx = canvas.getContext('2d');
 
-  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-  resize();
-  window.addEventListener('resize', resize);
+  const cols = () => Math.floor(canvas.width  / CELL);
+  const rows = () => Math.floor(canvas.height / CELL);
 
-  // SE-moving glider
-  const GLIDER = [[1,0],[2,1],[0,2],[1,2],[2,2]];
+  const BLOCK   = [[0,0],[1,0],[0,1],[1,1]];
+  const BEEHIVE = [[1,0],[2,0],[0,1],[3,1],[1,2],[2,2]];
+  const LOAF    = [[1,0],[2,0],[0,1],[3,1],[1,2],[3,2],[2,3]];
+  const BOAT    = [[0,0],[1,0],[0,1],[2,1],[1,2]];
+  const TUB     = [[1,0],[0,1],[2,1],[1,2]];
+  const PENTA   = [[2,0],[2,1],[1,2],[3,2],[2,3],[2,4],[2,5],[2,6],[1,7],[3,7],[2,8],[2,9]];
+  const GLIDER  = [[1,0],[2,1],[0,2],[1,2],[2,2]];
 
   let cells = new Set();
   let stepTimer = null;
 
-  function cols() { return Math.floor(canvas.width  / CELL); }
-  function rows() { return Math.floor(canvas.height / CELL); }
+  function place(pattern, oc, or_) {
+    pattern.forEach(([dc, dr]) => cells.add(`${oc + dc},${or_ + dr}`));
+  }
 
-  function shouldShow() {
-    const about = document.getElementById('about');
-    return about && window.scrollY + window.innerHeight > about.offsetTop;
+  function init() {
+    canvas.width  = window.innerWidth;
+    canvas.height = document.body.scrollHeight;
+
+    cells = new Set();
+    const cc = cols(), rr = rows();
+    if (cc < 30 || rr < 20) return;
+
+    const aboutEl = document.getElementById('about');
+    const startR  = aboutEl ? Math.ceil(aboutEl.offsetTop / CELL) : Math.floor(rr * 0.2);
+    const span    = rr - startR - 4;
+
+    place(BLOCK,   cc - 8,                  startR + Math.floor(span * 0.05));
+    place(TUB,     Math.floor(cc * 0.12),   startR + Math.floor(span * 0.12));
+    place(PENTA,   cc - 22,                 startR + Math.floor(span * 0.28));
+    place(BEEHIVE, cc - 14,                 startR + Math.floor(span * 0.45));
+    place(LOAF,    4,                        startR + Math.floor(span * 0.55));
+    place(BOAT,    cc - 8,                  startR + Math.floor(span * 0.72));
   }
 
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (!shouldShow() || !cells.size) return;
+    if (!cells.size) return;
     ctx.fillStyle = '#fff';
+    const cc = cols(), rr = rows();
     cells.forEach(k => {
       const [c, r] = k.split(',').map(Number);
-      if (c >= 0 && r >= 0 && c < cols() && r < rows())
+      if (c >= 0 && r >= 0 && c < cc && r < rr)
         ctx.fillRect(c * CELL, r * CELL, CELL - 1, CELL - 1);
     });
   }
@@ -367,35 +490,26 @@ fadeEls.forEach(el => fadeObserver.observe(el));
   function step() {
     cells = nextGen();
     draw();
-    const gone = !cells.size || [...cells].every(k => {
-      const [c, r] = k.split(',').map(Number);
-      return c < 0 || r < 0 || c >= cols() || r >= rows();
-    });
-    if (gone) {
-      cells = new Set();
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      stepTimer = null;
-      schedule();
-      return;
-    }
     stepTimer = setTimeout(step, STEP_MS);
   }
 
-  function spawn() {
-    if (stepTimer) { clearTimeout(stepTimer); stepTimer = null; }
-    const C = cols(), R = rows();
+  function spawnGlider() {
+    const cc = cols(), rr = rows();
+    const aboutEl = document.getElementById('about');
+    const startR  = aboutEl ? Math.ceil(aboutEl.offsetTop / CELL) : Math.floor(rr * 0.2);
     const fromTop = Math.random() < 0.5;
-    const sc = fromTop ? Math.floor(Math.random() * (C - 4)) : 0;
-    const sr = fromTop ? 0 : Math.floor(Math.random() * (R - 4));
-    cells = new Set(GLIDER.map(([dc, dr]) => `${sc + dc},${sr + dr}`));
-    draw();
-    stepTimer = setTimeout(step, STEP_MS);
+    const sc = fromTop ? Math.floor(cc / 3 + Math.random() * cc / 3) : 0;
+    const sr = fromTop ? startR : startR + Math.floor(Math.random() * (rr - startR - 4));
+    place(GLIDER, sc, sr);
+    setTimeout(spawnGlider, 120000 + Math.random() * 180000);
   }
 
-  function schedule() {
-    setTimeout(spawn, 120000 + Math.random() * 180000); // 2–5 min
-  }
+  // Delay init slightly so fonts/layout have settled
+  setTimeout(() => {
+    init();
+    step();
+    setTimeout(spawnGlider, 120000 + Math.random() * 180000);
+  }, 200);
 
-  window.addEventListener('scroll', draw, { passive: true });
-  schedule();
+  window.addEventListener('resize', () => { init(); });
 }());

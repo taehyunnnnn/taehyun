@@ -14,9 +14,10 @@
     <a href="#" class="nav-logo"><span class="bracket">[</span><span class="logo-text">TAEHYUN</span><span class="bracket">]</span></a>
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
-      <li><a href="#skills">Skills</a></li>
+      <li><a href="#interests">Interests</a></li>
+      <li><a href="#now">Now</a></li>
       <li><a href="#projects">Projects</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="#connect">Connect</a></li>
     </ul>
   </nav>
 
@@ -48,10 +49,10 @@
   <section id="quote">
     <div class="quote-sticky">
       <div class="quote-img quote-img-left">
-        <img src="assets/images/apple-tree.png" alt="" />
+        <img src="assets/images/apple_tree_pixel.png" alt="" />
       </div>
       <div class="quote-img quote-img-right">
-        <img src="assets/images/isaac-newton.png" alt="" />
+        <img src="assets/images/isaac_newton_pixel.png" alt="" />
       </div>
       <p class="quote-text" id="quote-text">THE APPLE DOES NOT FALL FOR THOSE WHO WAIT. IT WAS NEVER GOING TO. GO CLIMB FOR IT.</p>
     </div>
@@ -91,48 +92,62 @@
   </section>
 
 
-  <!-- ── SKILLS ── -->
-  <section id="skills">
-    <p class="section-label">Skills</p>
-    <div class="skills-grid fade-in">
+  <!-- ── INTERESTS ── -->
+  <section id="interests">
+    <p class="section-label">Interests</p>
+    <ul class="interests-list fade-in">
+      <li class="interest-item">
+        <span class="interest-type">Film</span>
+        <span class="interest-name">Slow Cinema</span>
+      </li>
+      <li class="interest-item">
+        <span class="interest-type">Music</span>
+        <span class="interest-name">Placeholder Artist</span>
+      </li>
+      <li class="interest-item">
+        <span class="interest-type">Sport</span>
+        <span class="interest-name">Placeholder Activity</span>
+      </li>
+      <li class="interest-item">
+        <span class="interest-type">Film</span>
+        <span class="interest-name">Placeholder</span>
+      </li>
+    </ul>
+  </section>
 
-      <div class="skill-card">
-        <p class="skill-category">Languages</p>
-        <ul class="skill-list">
-          <li>Java</li>
-          <li>Python</li>
-          <li>C</li>
-          <li>C++</li>
-          <li>TypeScript</li>
-        </ul>
+
+  <!-- ── NOW ── -->
+  <section id="now">
+    <p class="section-label">Now</p>
+    <div class="now-clock" id="now-clock"></div>
+    <div class="now-list fade-in">
+
+      <div class="now-row">
+        <span class="now-dot"></span>
+        <span class="now-type">Building</span>
+        <span class="now-name">SchooledUp</span>
+        <span class="now-aside">AI-powered student platform — shipping 2026</span>
       </div>
 
-      <div class="skill-card">
-        <p class="skill-category">Frontend</p>
-        <ul class="skill-list">
-          <li>Next.js</li>
-          <li>React</li>
-          <li>HTML/CSS</li>
-        </ul>
+      <div class="now-row">
+        <span class="now-dot"></span>
+        <span class="now-type">Learning</span>
+        <span class="now-name">Systems programming in C</span>
+        <span class="now-aside">Memory management, OS internals</span>
       </div>
 
-      <div class="skill-card">
-        <p class="skill-category">Backend</p>
-        <ul class="skill-list">
-          <li>FastAPI</li>
-          <li>Node.js</li>
-          <li>Supabase</li>
-        </ul>
+      <div class="now-row">
+        <span class="now-dot"></span>
+        <span class="now-type">Reading</span>
+        <span class="now-name">Placeholder Book Title</span>
+        <span class="now-aside">Author Name</span>
       </div>
 
-      <div class="skill-card">
-        <p class="skill-category">Tools</p>
-        <ul class="skill-list">
-          <li>Git</li>
-          <li>GitHub</li>
-          <li>Vercel</li>
-          <li>Railway</li>
-        </ul>
+      <div class="now-row">
+        <span class="now-dot"></span>
+        <span class="now-type">Listening</span>
+        <span class="now-name">Placeholder Artist / Album</span>
+        <span class="now-aside">Genre or mood</span>
       </div>
 
     </div>
@@ -144,61 +159,43 @@
     <p class="section-label">Projects</p>
     <div class="projects-list">
 
-      <div class="project-item fade-in">
+      <a class="project-row" href="https://schooledup.app" target="_blank" rel="noopener noreferrer">
+        <span class="project-name">SchooledUp</span>
+        <span class="project-fill"></span>
         <span class="project-year">2026</span>
-        <div class="project-body">
-          <h3 class="project-title">SchooledUp</h3>
-          <p class="project-desc">AI-powered study automation app that transforms raw course material into organized notes, tasks, and a personal RAG chat.</p>
-          <div class="project-tags">
-            <span class="tag">Next.js</span>
-            <span class="tag">FastAPI</span>
-            <span class="tag">Supabase</span>
-            <span class="tag">OpenAI</span>
-          </div>
-        </div>
-        <div class="project-links">
-          <a href="https://github.com/taehyunnnnn/schooledup" target="_blank" rel="noopener noreferrer" class="project-link">GitHub ↗</a>
-          <a href="https://schooledup.app" target="_blank" rel="noopener noreferrer" class="project-link">Live ↗</a>
-        </div>
-      </div>
+      </a>
 
-      <div class="project-item fade-in">
+      <a class="project-row" href="https://github.com/taehyunnnnn/twoPointInterferencePatternSimulator.processing" target="_blank" rel="noopener noreferrer">
+        <span class="project-name">Two Point Interference Simulator</span>
+        <span class="project-fill"></span>
         <span class="project-year">2025</span>
-        <div class="project-body">
-          <h3 class="project-title">Two Point Interference Pattern Simulator</h3>
-          <p class="project-desc">Interactive physics simulator visualizing adjustable two-point wave interference patterns in real time.</p>
-          <div class="project-tags">
-            <span class="tag">Processing</span>
-            <span class="tag">Java</span>
-          </div>
-        </div>
-        <div class="project-links">
-          <a href="https://github.com/taehyunnnnn/twoPointInterferencePatternSimulator.processing" target="_blank" rel="noopener noreferrer" class="project-link">GitHub ↗</a>
-        </div>
-      </div>
+      </a>
 
-      <div class="project-item fade-in">
+      <a class="project-row" href="https://github.com/taehyunnnnn/tictactoe.java" target="_blank" rel="noopener noreferrer">
+        <span class="project-name">Tic Tac Toe</span>
+        <span class="project-fill"></span>
+        <span class="project-year">2025</span>
+      </a>
+
+      <a class="project-row" href="https://github.com/taehyunnnnn/tombOfTheMask.java" target="_blank" rel="noopener noreferrer">
+        <span class="project-name">Tomb of the Mask</span>
+        <span class="project-fill"></span>
+        <span class="project-year">2024</span>
+      </a>
+
+      <a class="project-row" href="https://github.com/taehyunnnnn/flappyBird.turing" target="_blank" rel="noopener noreferrer">
+        <span class="project-name">Flappy Bird</span>
+        <span class="project-fill"></span>
         <span class="project-year">2023</span>
-        <div class="project-body">
-          <h3 class="project-title">Tomb of the Mask</h3>
-          <p class="project-desc">Full recreation of the arcade mobile game, built from scratch in Java.</p>
-          <div class="project-tags">
-            <span class="tag">Java</span>
-            <span class="tag">Processing</span>
-          </div>
-        </div>
-        <div class="project-links">
-          <a href="https://github.com/taehyunnnnn/tombOfTheMask.java" target="_blank" rel="noopener noreferrer" class="project-link">GitHub ↗</a>
-        </div>
-      </div>
+      </a>
 
     </div>
   </section>
 
 
-  <!-- ── CONTACT ── -->
-  <section id="contact">
-    <p class="section-label">Contact</p>
+  <!-- ── CONNECT ── -->
+  <section id="connect">
+    <p class="section-label">Connect</p>
     <div class="contact-grid fade-in">
 
       <div>
