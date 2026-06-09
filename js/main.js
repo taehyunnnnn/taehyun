@@ -39,7 +39,7 @@ fadeEls.forEach(el => fadeObserver.observe(el));
 // Pixel trail on hero
 (function () {
   const hero = document.getElementById('hero');
-  const nameLines = hero && hero.querySelectorAll('.name-line');
+  const nameLines = hero && hero.querySelectorAll('.name-cap, .name-rest');
   if (!hero || !nameLines.length) return;
 
   const PX = 14;
