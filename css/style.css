@@ -370,6 +370,15 @@ section {
   color: var(--white);
 }
 
+.name-cap {
+  display: inline-block;
+}
+
+.name-rest {
+  display: inline-block;
+  margin-left: -0.35em;
+}
+
 .hero-tagline {
   font-family: 'DepartureMono', monospace;
   font-size: clamp(0.8rem, 1.5vw, 1rem);
