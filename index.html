@@ -3,588 +3,234 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Your Name — Portfolio</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --black: #0a0a0a;
-      --white: #f5f5f5;
-      --gray: #888;
-      --border: #222;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      background: var(--black);
-      color: var(--white);
-      line-height: 1.6;
-    }
-
-    a { color: inherit; text-decoration: none; }
-
-    /* ── NAV ── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.25rem 6vw;
-      border-bottom: 1px solid var(--border);
-      background: var(--black);
-    }
-
-    .nav-logo {
-      font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 2rem;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-size: 0.8rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--gray);
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover { color: var(--white); }
-
-    /* ── SECTIONS ── */
-    section {
-      padding: 7rem 6vw;
-      border-bottom: 1px solid var(--border);
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .section-label {
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gray);
-      margin-bottom: 3rem;
-    }
-
-    /* ── HERO ── */
-    #hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding-top: 8rem;
-      max-width: 100%;
-      padding-left: 6vw;
-      padding-right: 6vw;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .hero-name {
-      font-size: clamp(3rem, 10vw, 9rem);
-      font-weight: 700;
-      line-height: 0.95;
-      letter-spacing: -0.03em;
-      margin-bottom: 2rem;
-    }
-
-    .hero-tagline {
-      font-size: clamp(1rem, 2vw, 1.4rem);
-      color: var(--gray);
-      max-width: 520px;
-      margin-bottom: 3rem;
-    }
-
-    .hero-links {
-      display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-      margin-bottom: 4rem;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 0.65rem 1.4rem;
-      font-size: 0.8rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      border: 1px solid var(--white);
-      transition: background 0.2s, color 0.2s;
-      cursor: pointer;
-    }
-
-    .btn:hover { background: var(--white); color: var(--black); }
-
-    .btn-ghost {
-      border-color: var(--border);
-      color: var(--gray);
-    }
-
-    .btn-ghost:hover { border-color: var(--white); color: var(--white); background: transparent; }
-
-    /* ── ABOUT ── */
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: start;
-    }
-
-    .about-text p {
-      font-size: 1.05rem;
-      color: var(--gray);
-      margin-bottom: 1rem;
-      line-height: 1.8;
-    }
-
-    .about-text p span { color: var(--white); }
-
-    .about-details { display: flex; flex-direction: column; gap: 1rem; }
-
-    .detail-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      padding-bottom: 0.75rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .detail-key {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--gray);
-    }
-
-    .detail-val { font-size: 0.9rem; }
-
-    /* ── SKILLS ── */
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 1px;
-      border: 1px solid var(--border);
-    }
-
-    .skill-card {
-      padding: 1.75rem;
-      border-right: 1px solid var(--border);
-    }
-
-    .skill-category {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: var(--gray);
-      margin-bottom: 1rem;
-    }
-
-    .skill-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
-
-    .skill-list li { font-size: 0.9rem; }
-
-    /* ── PROJECTS ── */
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1px;
-      border: 1px solid var(--border);
-    }
-
-    .project-card {
-      padding: 2rem;
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      transition: background 0.2s;
-    }
-
-    .project-card:hover { background: #111; }
-
-    .project-year {
-      font-size: 0.7rem;
-      color: var(--gray);
-      letter-spacing: 0.1em;
-    }
-
-    .project-title { font-size: 1.15rem; font-weight: 600; }
-
-    .project-desc { font-size: 0.88rem; color: var(--gray); line-height: 1.7; }
-
-    .project-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: auto;
-      padding-top: 0.5rem;
-    }
-
-    .tag {
-      font-size: 0.68rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 0.3rem 0.6rem;
-      border: 1px solid var(--border);
-      color: var(--gray);
-    }
-
-    .project-link {
-      font-size: 0.75rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--gray);
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      transition: color 0.2s;
-    }
-
-    .project-link:hover { color: var(--white); }
-
-    /* ── EXPERIENCE ── */
-    .exp-list { display: flex; flex-direction: column; gap: 0; }
-
-    .exp-item {
-      display: grid;
-      grid-template-columns: 160px 1fr;
-      gap: 2rem;
-      padding: 2rem 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .exp-period {
-      font-size: 0.78rem;
-      color: var(--gray);
-      letter-spacing: 0.05em;
-      padding-top: 0.2rem;
-    }
-
-    .exp-role { font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem; }
-
-    .exp-company { font-size: 0.88rem; color: var(--gray); margin-bottom: 0.75rem; }
-
-    .exp-desc { font-size: 0.88rem; color: var(--gray); line-height: 1.7; }
-
-    /* ── CONTACT ── */
-    .contact-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: start;
-    }
-
-    .contact-headline {
-      font-size: clamp(1.8rem, 4vw, 3rem);
-      font-weight: 700;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      margin-bottom: 1.5rem;
-    }
-
-    .contact-sub { font-size: 0.95rem; color: var(--gray); line-height: 1.7; }
-
-    .contact-links { display: flex; flex-direction: column; gap: 1rem; }
-
-    .contact-link-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .contact-platform {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--gray);
-    }
-
-    .contact-handle {
-      font-size: 0.9rem;
-      transition: color 0.2s;
-    }
-
-    .contact-handle:hover { color: var(--gray); }
-
-    /* ── FOOTER ── */
-    footer {
-      padding: 2rem 6vw;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.75rem;
-      color: var(--gray);
-      letter-spacing: 0.05em;
-    }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 700px) {
-      .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-      .exp-item { grid-template-columns: 1fr; gap: 0.5rem; }
-      .nav-links { display: none; }
-    }
-  </style>
+  <meta name="description" content="Taehyun Im — Portfolio" />
+  <title>Taehyun Im</title>
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
-  <!-- NAV -->
+  <!-- ── NAV ── -->
   <nav>
-    <span class="nav-logo">YN</span>
+    <a href="#" class="nav-logo"><span class="bracket">[</span><span class="logo-text">TAEHYUN</span><span class="bracket">]</span></a>
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
       <li><a href="#skills">Skills</a></li>
       <li><a href="#projects">Projects</a></li>
-      <li><a href="#experience">Experience</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </nav>
 
-  <!-- HERO -->
+
+  <!-- ── HERO ── -->
   <section id="hero">
-    <h1 class="hero-name">Your<br>Name</h1>
-    <p class="hero-tagline">
-      <!-- One-line pitch: what you do and what you care about -->
-      Software engineer focused on building clean, fast, and thoughtful products.
-    </p>
-    <div class="hero-links">
-      <a href="#projects" class="btn">View Work</a>
-      <a href="#contact" class="btn btn-ghost">Get in Touch</a>
-      <a href="/resume.pdf" class="btn btn-ghost" target="_blank">Resume ↗</a>
+
+    <div class="hero-bg">
+      <img src="assets/images/melancholia-i.jpg" alt="" class="hero-img" />
+    </div>
+    <div class="hero-grain"></div>
+
+    <span class="editorial ed-1">SELECTED</span>
+    <span class="editorial ed-2">No. 01</span>
+    <span class="editorial ed-3">MMXXVI</span>
+    <span class="editorial ed-4">WORKS</span>
+
+    <span class="hero-art-credit">[Melencolia I — Albrecht Dürer, 1514]</span>
+
+    <div class="hero-content">
+      <h1 class="hero-name"><span class="name-line">T</span><span class="name-line">aehyun</span><br><span class="name-line">I</span><span class="name-line">m</span></h1>
+      <p class="hero-tagline">undefined but not unreachable</p>
+    </div>
+
+  </section>
+
+
+  <!-- ── QUOTE ── -->
+  <section id="quote">
+    <div class="quote-sticky">
+      <div class="quote-img quote-img-left">
+        <img src="assets/images/apple-tree.png" alt="" />
+      </div>
+      <div class="quote-img quote-img-right">
+        <img src="assets/images/isaac-newton.png" alt="" />
+      </div>
+      <p class="quote-text" id="quote-text">THE APPLE DOES NOT FALL FOR THOSE WHO WAIT. IT WAS NEVER GOING TO. GO CLIMB FOR IT.</p>
     </div>
   </section>
 
-  <!-- ABOUT -->
+
+  <!-- ── ABOUT ── -->
   <section id="about">
     <p class="section-label">About</p>
-    <div class="about-grid">
+    <div class="about-grid fade-in">
+
       <div class="about-text">
-        <p>
-          Hi, I'm <span>Your Name</span> — a [your role] based in [your city].
-          I'm passionate about [your interest #1] and [your interest #2].
-        </p>
-        <p>
-          Currently at <span>[Company / School]</span>, where I work on
-          [what you do]. Previously [brief past experience].
-        </p>
-        <p>
-          Outside of work I enjoy [hobby #1], [hobby #2], and [hobby #3].
-        </p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
       </div>
-      <div class="about-details">
-        <div class="detail-row">
-          <span class="detail-key">Location</span>
-          <span class="detail-val">Your City, Country</span>
+
+      <div class="about-meta">
+        <div class="meta-row">
+          <span class="meta-key">Location</span>
+          <span class="meta-val">Toronto, Canada</span>
         </div>
-        <div class="detail-row">
-          <span class="detail-key">Status</span>
-          <span class="detail-val">Open to opportunities</span>
+        <div class="meta-row">
+          <span class="meta-key">University</span>
+          <span class="meta-val">University of Toronto Scarborough — BSc Computer Science</span>
         </div>
-        <div class="detail-row">
-          <span class="detail-key">Education</span>
-          <span class="detail-val">B.S. Computer Science — Your University</span>
+        <div class="meta-row">
+          <span class="meta-key">Grad Year</span>
+          <span class="meta-val">2029</span>
         </div>
-        <div class="detail-row">
-          <span class="detail-key">Email</span>
-          <span class="detail-val">you@example.com</span>
+        <div class="meta-row">
+          <span class="meta-key">Email</span>
+          <span class="meta-val">i.taehyun0315@gmail.com</span>
         </div>
       </div>
+
     </div>
   </section>
 
-  <!-- SKILLS -->
+
+  <!-- ── SKILLS ── -->
   <section id="skills">
     <p class="section-label">Skills</p>
-    <div class="skills-grid">
+    <div class="skills-grid fade-in">
+
       <div class="skill-card">
         <p class="skill-category">Languages</p>
         <ul class="skill-list">
+          <li>Java</li>
           <li>Python</li>
+          <li>C</li>
+          <li>C++</li>
           <li>TypeScript</li>
-          <li>Go</li>
-          <li>SQL</li>
         </ul>
       </div>
+
       <div class="skill-card">
         <p class="skill-category">Frontend</p>
         <ul class="skill-list">
-          <li>React</li>
           <li>Next.js</li>
-          <li>Tailwind CSS</li>
-          <li>HTML / CSS</li>
+          <li>React</li>
+          <li>HTML/CSS</li>
         </ul>
       </div>
+
       <div class="skill-card">
         <p class="skill-category">Backend</p>
         <ul class="skill-list">
-          <li>Node.js</li>
           <li>FastAPI</li>
-          <li>PostgreSQL</li>
-          <li>Redis</li>
+          <li>Node.js</li>
+          <li>Supabase</li>
         </ul>
       </div>
+
       <div class="skill-card">
         <p class="skill-category">Tools</p>
         <ul class="skill-list">
-          <li>Git / GitHub</li>
-          <li>Docker</li>
-          <li>AWS</li>
-          <li>Figma</li>
+          <li>Git</li>
+          <li>GitHub</li>
+          <li>Vercel</li>
+          <li>Railway</li>
         </ul>
       </div>
+
     </div>
   </section>
 
-  <!-- PROJECTS -->
+
+  <!-- ── PROJECTS ── -->
   <section id="projects">
     <p class="section-label">Projects</p>
-    <div class="projects-grid">
+    <div class="projects-list">
 
-      <div class="project-card">
-        <span class="project-year">2024</span>
-        <h3 class="project-title">Project Alpha</h3>
-        <p class="project-desc">
-          A one-sentence description of what this project does and why it matters.
-          Keep it punchy.
-        </p>
-        <div class="project-tags">
-          <span class="tag">React</span>
-          <span class="tag">TypeScript</span>
-          <span class="tag">Node.js</span>
+      <div class="project-item fade-in">
+        <span class="project-year">2026</span>
+        <div class="project-body">
+          <h3 class="project-title">SchooledUp</h3>
+          <p class="project-desc">AI-powered study automation app that transforms raw course material into organized notes, tasks, and a personal RAG chat.</p>
+          <div class="project-tags">
+            <span class="tag">Next.js</span>
+            <span class="tag">FastAPI</span>
+            <span class="tag">Supabase</span>
+            <span class="tag">OpenAI</span>
+          </div>
         </div>
-        <a href="#" class="project-link">GitHub ↗</a>
+        <div class="project-links">
+          <a href="https://github.com/taehyunnnnn/schooledup" target="_blank" rel="noopener noreferrer" class="project-link">GitHub ↗</a>
+          <a href="https://schooledup.app" target="_blank" rel="noopener noreferrer" class="project-link">Live ↗</a>
+        </div>
       </div>
 
-      <div class="project-card">
-        <span class="project-year">2024</span>
-        <h3 class="project-title">Project Beta</h3>
-        <p class="project-desc">
-          A one-sentence description of what this project does and why it matters.
-          Keep it punchy.
-        </p>
-        <div class="project-tags">
-          <span class="tag">Python</span>
-          <span class="tag">FastAPI</span>
-          <span class="tag">PostgreSQL</span>
+      <div class="project-item fade-in">
+        <span class="project-year">2025</span>
+        <div class="project-body">
+          <h3 class="project-title">Two Point Interference Pattern Simulator</h3>
+          <p class="project-desc">Interactive physics simulator visualizing adjustable two-point wave interference patterns in real time.</p>
+          <div class="project-tags">
+            <span class="tag">Processing</span>
+            <span class="tag">Java</span>
+          </div>
         </div>
-        <a href="#" class="project-link">Live ↗</a>
+        <div class="project-links">
+          <a href="https://github.com/taehyunnnnn/twoPointInterferencePatternSimulator.processing" target="_blank" rel="noopener noreferrer" class="project-link">GitHub ↗</a>
+        </div>
       </div>
 
-      <div class="project-card">
+      <div class="project-item fade-in">
         <span class="project-year">2023</span>
-        <h3 class="project-title">Project Gamma</h3>
-        <p class="project-desc">
-          A one-sentence description of what this project does and why it matters.
-          Keep it punchy.
-        </p>
-        <div class="project-tags">
-          <span class="tag">Go</span>
-          <span class="tag">Docker</span>
-          <span class="tag">AWS</span>
+        <div class="project-body">
+          <h3 class="project-title">Tomb of the Mask</h3>
+          <p class="project-desc">Full recreation of the arcade mobile game, built from scratch in Java.</p>
+          <div class="project-tags">
+            <span class="tag">Java</span>
+            <span class="tag">Processing</span>
+          </div>
         </div>
-        <a href="#" class="project-link">GitHub ↗</a>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- EXPERIENCE -->
-  <section id="experience">
-    <p class="section-label">Experience</p>
-    <div class="exp-list">
-
-      <div class="exp-item">
-        <span class="exp-period">Jan 2024 — Present</span>
-        <div>
-          <p class="exp-role">Software Engineer</p>
-          <p class="exp-company">Company Name · Full-time</p>
-          <p class="exp-desc">
-            One or two sentences about what you built, owned, or improved.
-            Quantify impact where you can (e.g., reduced latency by 30%).
-          </p>
-        </div>
-      </div>
-
-      <div class="exp-item">
-        <span class="exp-period">Jun 2023 — Dec 2023</span>
-        <div>
-          <p class="exp-role">Software Engineering Intern</p>
-          <p class="exp-company">Another Company · Internship</p>
-          <p class="exp-desc">
-            One or two sentences about what you built, owned, or improved.
-            Quantify impact where you can.
-          </p>
-        </div>
-      </div>
-
-      <div class="exp-item">
-        <span class="exp-period">Sep 2021 — May 2025</span>
-        <div>
-          <p class="exp-role">B.S. Computer Science</p>
-          <p class="exp-company">Your University · GPA 3.X / 4.0</p>
-          <p class="exp-desc">
-            Relevant coursework: Data Structures, Algorithms, Systems Programming,
-            Machine Learning, Databases.
-          </p>
+        <div class="project-links">
+          <a href="https://github.com/taehyunnnnn/tombOfTheMask.java" target="_blank" rel="noopener noreferrer" class="project-link">GitHub ↗</a>
         </div>
       </div>
 
     </div>
   </section>
 
-  <!-- CONTACT -->
+
+  <!-- ── CONTACT ── -->
   <section id="contact">
     <p class="section-label">Contact</p>
-    <div class="contact-grid">
+    <div class="contact-grid fade-in">
+
       <div>
-        <h2 class="contact-headline">Let's build<br>something.</h2>
-        <p class="contact-sub">
-          Whether it's a job, a side project, or just a chat —
-          my inbox is open.
-        </p>
+        <h2 class="contact-headline">let's build together.</h2>
+        <p class="contact-sub">always open to new projects, collabs, or just a good conversation.</p>
       </div>
+
       <div class="contact-links">
-        <div class="contact-link-row">
+        <div class="contact-row">
           <span class="contact-platform">Email</span>
-          <a href="mailto:you@example.com" class="contact-handle">you@example.com</a>
+          <a href="mailto:i.taehyun0315@gmail.com" class="contact-handle">i.taehyun0315@gmail.com</a>
         </div>
-        <div class="contact-link-row">
+        <div class="contact-row">
           <span class="contact-platform">GitHub</span>
-          <a href="https://github.com/yourusername" target="_blank" class="contact-handle">@yourusername</a>
+          <a href="https://github.com/taehyunnnnn" target="_blank" rel="noopener noreferrer" class="contact-handle">@taehyunnnnn</a>
         </div>
-        <div class="contact-link-row">
+        <div class="contact-row">
           <span class="contact-platform">LinkedIn</span>
-          <a href="https://linkedin.com/in/yourhandle" target="_blank" class="contact-handle">linkedin.com/in/yourhandle</a>
-        </div>
-        <div class="contact-link-row">
-          <span class="contact-platform">Twitter / X</span>
-          <a href="https://twitter.com/yourhandle" target="_blank" class="contact-handle">@yourhandle</a>
+          <a href="https://www.linkedin.com/in/taehyunim" target="_blank" rel="noopener noreferrer" class="contact-handle">linkedin.com/in/taehyunim</a>
         </div>
       </div>
+
     </div>
   </section>
 
-  <!-- FOOTER -->
+
+  <!-- ── FOOTER ── -->
   <footer>
-    <span>© 2026 Your Name</span>
-    <span>Designed &amp; built by you</span>
+    <span>© 2026 Taehyun Im</span>
+    <span>Built by you</span>
   </footer>
 
+  <script src="js/main.js"></script>
 </body>
 </html>

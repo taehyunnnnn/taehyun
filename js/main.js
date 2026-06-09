@@ -1,0 +1,401 @@
+// Active nav link on scroll
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`);
+      });
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+
+sections.forEach(s => observer.observe(s));
+
+// Contact is at the page bottom — activate it when scrolled near the end
+window.addEventListener('scroll', () => {
+  if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 80) {
+    navLinks.forEach(link => {
+      link.classList.toggle('active', link.getAttribute('href') === '#contact');
+    });
+  }
+}, { passive: true });
+
+// Fade-in on scroll
+const fadeEls = document.querySelectorAll('.fade-in');
+const fadeObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      fadeObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+fadeEls.forEach(el => fadeObserver.observe(el));
+
+// Pixel trail on hero
+(function () {
+  const hero = document.getElementById('hero');
+  const nameLines = hero && hero.querySelectorAll('.name-line');
+  if (!hero || !nameLines.length) return;
+
+  const PX = 14;
+  let gridEl = null, cells = [], cols = 0, rows = 0;
+  let lastC = -1, lastR = -1;
+  let exRect = null;
+
+  function build() {
+    if (gridEl) gridEl.remove();
+    gridEl = document.createElement('div');
+    gridEl.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:4;overflow:hidden;';
+    hero.appendChild(gridEl);
+
+    cols = Math.ceil(hero.offsetWidth / PX);
+    rows = Math.ceil(hero.offsetHeight / PX) + 1;
+    cells = [];
+
+    for (let r = 0; r < rows; r++) {
+      cells[r] = [];
+      for (let c = 0; c < cols; c++) {
+        const el = document.createElement('div');
+        el.style.cssText = `position:absolute;left:${c * PX}px;top:${r * PX}px;width:${PX}px;height:${PX}px;opacity:0;background:rgb(245,245,245);`;
+        gridEl.appendChild(el);
+        cells[r][c] = el;
+      }
+    }
+
+    exRect = null;
+    lastC = lastR = -1;
+  }
+
+  function getExclusions() {
+    if (exRect) return exRect;
+    const hr = hero.getBoundingClientRect();
+    const pad = Math.round(PX / 2);
+    exRect = Array.from(nameLines).map(line => {
+      const nr = line.getBoundingClientRect();
+      return {
+        c1: Math.floor((nr.left  - hr.left - pad) / PX),
+        r1: Math.floor((nr.top   - hr.top  - pad) / PX),
+        c2: Math.ceil( (nr.right - hr.left + pad) / PX),
+        r2: Math.ceil( (nr.bottom - hr.top + pad) / PX),
+      };
+    });
+    return exRect;
+  }
+
+  function activate(c, r) {
+    if (c < 0 || r < 0 || c >= cols || r >= rows) return;
+    const zones = getExclusions();
+    const inZone = zones.some(ex => c >= ex.c1 && c < ex.c2 && r >= ex.r1 && r < ex.r2);
+    const el = cells[r][c];
+    el.style.transition = 'none';
+    el.style.background = inZone ? 'rgba(245,245,245,0.18)' : 'rgb(245,245,245)';
+    el.style.opacity = '1';
+    requestAnimationFrame(() => {
+      el.style.transition = 'opacity 2s ease';
+      el.style.opacity = '0';
+    });
+  }
+
+  build();
+  let resizeTimer;
+  window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(build, 200); });
+
+  function plotLine(c0, r0, c1, r1) {
+    const dc = Math.abs(c1 - c0), dr = Math.abs(r1 - r0);
+    const sc = c0 < c1 ? 1 : -1, sr = r0 < r1 ? 1 : -1;
+    let err = dc - dr, c = c0, r = r0;
+    while (true) {
+      activate(c, r);
+      if (c === c1 && r === r1) break;
+      const e2 = 2 * err;
+      if (e2 > -dr) { err -= dr; c += sc; }
+      if (e2 <  dc) { err += dc; r += sr; }
+    }
+  }
+
+  hero.addEventListener('mousemove', (e) => {
+    const rect = hero.getBoundingClientRect();
+    const c = Math.floor((e.clientX - rect.left) / PX);
+    const r = Math.floor((e.clientY - rect.top)  / PX);
+    if (c === lastC && r === lastR) return;
+    if (lastC === -1) { activate(c, r); }
+    else { plotLine(lastC, lastR, c, r); }
+    lastC = c; lastR = r;
+  });
+
+  hero.addEventListener('mouseleave', () => { lastC = lastR = -1; exRect = null; });
+
+}());
+
+// Nav logo: cycles English → Korean → Chinese on click, glitches on English
+(function () {
+  const logo = document.querySelector('.logo-text');
+  if (!logo) return;
+
+  const names = ['TAEHYUN', '임태현', '任泰炫'];
+  let nameIdx = 0;
+  let revertTimer = null;
+
+  const alikes = {
+    T: ['⊤', 'τ', '†', 'T'],
+    A: ['Λ', '∧', '4', 'A'],
+    E: ['∃', 'Ξ', '3', 'E'],
+    H: ['Η', 'ℍ', '#', 'H'],
+    Y: ['γ', 'Ψ', '¥', 'Y'],
+    U: ['∪', 'υ', 'Ü', 'U'],
+    N: ['И', 'ℕ', 'η', 'N'],
+  };
+
+  function glitchFrame() {
+    const chars = 'TAEHYUN'.split('').map(ch => {
+      if (Math.random() < 0.25) {
+        const opts = alikes[ch];
+        return opts[Math.floor(Math.random() * opts.length)];
+      }
+      return ch;
+    });
+    logo.textContent = chars.join('');
+  }
+
+  function restore() {
+    logo.textContent = names[nameIdx];
+  }
+
+  function runGlitch(frames) {
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i % 2 === 0) glitchFrame(); else restore();
+      i++;
+      if (i >= frames * 2) { clearInterval(interval); restore(); }
+    }, 60);
+  }
+
+  function flipTo(idx) {
+    if (revertTimer) { clearTimeout(revertTimer); revertTimer = null; }
+    nameIdx = idx;
+    let f = 0;
+    const iv = setInterval(() => {
+      logo.style.opacity = f % 2 === 0 ? '0.15' : '1';
+      f++;
+      if (f >= 6) { clearInterval(iv); logo.style.opacity = '1'; logo.textContent = names[nameIdx]; }
+    }, 50);
+  }
+
+  function switchName() {
+    const next = (nameIdx + 1) % names.length;
+    flipTo(next);
+    if (next !== 0) revertTimer = setTimeout(() => flipTo(0), 3000);
+  }
+
+  function scheduleGlitch() {
+    const delay = 3000 + Math.random() * 5000;
+    setTimeout(() => {
+      if (nameIdx === 0) runGlitch(3 + Math.floor(Math.random() * 3));
+      scheduleGlitch();
+    }, delay);
+  }
+
+  document.querySelector('.nav-logo').addEventListener('click', switchName);
+
+  scheduleGlitch();
+}());
+
+// Quote section: scroll-driven images + text reveal
+(function () {
+  const section = document.getElementById('quote');
+  const textEl  = document.getElementById('quote-text');
+  if (!section || !textEl) return;
+
+  // — text setup —
+  const words = textEl.textContent.trim().split(/\s+/);
+  textEl.innerHTML = words.map(w => `<span class="quote-word">${w}</span>`).join(' ');
+  const spans = Array.from(textEl.querySelectorAll('.quote-word'));
+  const total = spans.length;
+  spans.forEach(s => { s.style.color = '#333'; });
+
+  // — image refs —
+  const imgLeft  = section.querySelector('.quote-img-left');
+  const imgRight = section.querySelector('.quote-img-right');
+
+  function update() {
+    const sectionTop = section.offsetTop;
+    const scrollable = section.offsetHeight - window.innerHeight;
+    const progress = Math.max(0, Math.min(1, (window.scrollY - sectionTop) / scrollable));
+    const vw = window.innerWidth;
+
+    // phase 1 (0 → 0.25): images slide in from sides
+    const inP  = Math.max(0, Math.min(1, progress / 0.25));
+    // phase 3 (0.75 → 1.0): images slide back out to sides
+    const outP = Math.max(0, Math.min(1, (progress - 0.75) / 0.25));
+
+    const opacity = Math.min(inP, 1 - outP);
+    const leftX   = inP < 1 ? -vw * (1 - inP) : -vw * outP;
+    const rightX  = inP < 1 ?  vw * (1 - inP) :  vw * outP;
+
+    if (imgLeft)  { imgLeft.style.opacity  = opacity; imgLeft.style.transform  = `translateX(${leftX}px)`; }
+    if (imgRight) { imgRight.style.opacity = opacity; imgRight.style.transform = `translateX(${rightX}px)`; }
+
+    // phase 2 (0.25 → 0.75): word-by-word reveal
+    const textProgress = Math.max(0, Math.min(1, (progress - 0.25) / 0.50));
+    spans.forEach((span, i) => {
+      const start = (i / (total - 1)) * 0.96;
+      const end   = start + 0.04;
+      const p = Math.max(0, Math.min(1, (textProgress - start) / (end - start)));
+      const v = Math.round(51 + p * 204);
+      span.style.color = `rgb(${v},${v},${v})`;
+    });
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+}());
+
+// Tagline flicker with lookalike character swaps
+(function () {
+  const el = document.querySelector('.hero-tagline');
+  if (!el) return;
+
+  const original = 'undefined but not unreachable';
+  const alikes = {
+    u: ['υ', '∪', 'µ', 'u'],
+    n: ['η', 'И', 'ℕ', 'n'],
+    d: ['∂', 'δ', 'd'],
+    e: ['∃', 'ε', '3', 'e'],
+    f: ['ƒ', 'f'],
+    i: ['ı', '!', 'i'],
+    b: ['β', '6', 'b'],
+    t: ['τ', '†', 't'],
+    o: ['ο', '0', 'ø', 'o'],
+    r: ['ρ', 'г', 'r'],
+    a: ['α', '∂', 'a'],
+    c: ['ς', 'c'],
+    h: ['ℏ', 'h'],
+    l: ['1', '|', 'l'],
+  };
+
+  function glitchFrame() {
+    const chars = original.split('').map(ch => {
+      if (Math.random() < 0.2 && alikes[ch]) {
+        const opts = alikes[ch];
+        return opts[Math.floor(Math.random() * opts.length)];
+      }
+      return ch;
+    });
+    el.textContent = chars.join('');
+  }
+
+  function restore() { el.textContent = original; }
+
+  function runGlitch(frames) {
+    let i = 0;
+    const iv = setInterval(() => {
+      if (i % 2 === 0) glitchFrame(); else restore();
+      i++;
+      if (i >= frames * 2) { clearInterval(iv); restore(); }
+    }, 65);
+  }
+
+  function scheduleGlitch() {
+    const delay = 6000 + Math.random() * 8000;
+    setTimeout(() => { runGlitch(4 + Math.floor(Math.random() * 4)); scheduleGlitch(); }, delay);
+  }
+
+  el.addEventListener('mouseenter', () => runGlitch(8));
+
+  scheduleGlitch();
+}());
+
+// Conway's Game of Life — rare glider crossing content sections
+(function () {
+  const CELL    = 8;
+  const STEP_MS = 60;
+
+  const canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50;mix-blend-mode:difference;';
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // SE-moving glider
+  const GLIDER = [[1,0],[2,1],[0,2],[1,2],[2,2]];
+
+  let cells = new Set();
+  let stepTimer = null;
+
+  function cols() { return Math.floor(canvas.width  / CELL); }
+  function rows() { return Math.floor(canvas.height / CELL); }
+
+  function shouldShow() {
+    const about = document.getElementById('about');
+    return about && window.scrollY + window.innerHeight > about.offsetTop;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (!shouldShow() || !cells.size) return;
+    ctx.fillStyle = '#fff';
+    cells.forEach(k => {
+      const [c, r] = k.split(',').map(Number);
+      if (c >= 0 && r >= 0 && c < cols() && r < rows())
+        ctx.fillRect(c * CELL, r * CELL, CELL - 1, CELL - 1);
+    });
+  }
+
+  function nextGen() {
+    const counts = new Map();
+    cells.forEach(k => {
+      const [c, r] = k.split(',').map(Number);
+      for (let dc = -1; dc <= 1; dc++) for (let dr = -1; dr <= 1; dr++) {
+        if (!dc && !dr) continue;
+        const nk = `${c + dc},${r + dr}`;
+        counts.set(nk, (counts.get(nk) || 0) + 1);
+      }
+    });
+    const next = new Set();
+    counts.forEach((n, k) => { if (n === 3 || (n === 2 && cells.has(k))) next.add(k); });
+    return next;
+  }
+
+  function step() {
+    cells = nextGen();
+    draw();
+    const gone = !cells.size || [...cells].every(k => {
+      const [c, r] = k.split(',').map(Number);
+      return c < 0 || r < 0 || c >= cols() || r >= rows();
+    });
+    if (gone) {
+      cells = new Set();
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      stepTimer = null;
+      schedule();
+      return;
+    }
+    stepTimer = setTimeout(step, STEP_MS);
+  }
+
+  function spawn() {
+    if (stepTimer) { clearTimeout(stepTimer); stepTimer = null; }
+    const C = cols(), R = rows();
+    const fromTop = Math.random() < 0.5;
+    const sc = fromTop ? Math.floor(Math.random() * (C - 4)) : 0;
+    const sr = fromTop ? 0 : Math.floor(Math.random() * (R - 4));
+    cells = new Set(GLIDER.map(([dc, dr]) => `${sc + dc},${sr + dr}`));
+    draw();
+    stepTimer = setTimeout(step, STEP_MS);
+  }
+
+  function schedule() {
+    setTimeout(spawn, 120000 + Math.random() * 180000); // 2–5 min
+  }
+
+  window.addEventListener('scroll', draw, { passive: true });
+  schedule();
+}());
