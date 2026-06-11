@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Taehyun Im — Gallery" />
+  <title>Taehyun Im — Gallery</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .gallery-header {
+      padding: 8rem 6vw 3rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .gallery-header h1 {
+      font-family: 'Retrogression', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: normal;
+      line-height: 1;
+      margin-bottom: 1.5rem;
+    }
+
+    .gallery-filters {
+      display: flex;
+      gap: 0;
+    }
+
+    .gallery-filter {
+      font-family: 'DepartureMono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: var(--gray);
+      background: none;
+      border: 1px solid var(--border);
+      padding: 0.4rem 1rem;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+      margin-right: -1px;
+    }
+
+    .gallery-filter:first-child { border-radius: 0; }
+
+    .gallery-filter:hover { color: var(--white); }
+
+    .gallery-filter.active {
+      color: var(--white);
+      border-color: var(--white);
+      z-index: 1;
+      position: relative;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      border-left: 1px solid var(--border);
+      border-top: 1px solid var(--border);
+    }
+
+    .gallery-item {
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .gallery-item[hidden] { display: none; }
+
+    .gallery-item-img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      display: block;
+      filter: saturate(0.6);
+      transition: filter 0.3s ease, transform 0.3s ease;
+    }
+
+    .gallery-item:hover .gallery-item-img {
+      filter: saturate(1);
+      transform: scale(1.02);
+    }
+
+    .gallery-item-placeholder {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gallery-item-placeholder span {
+      font-family: 'DepartureMono', monospace;
+      font-size: 0.6rem;
+      color: var(--gray);
+      letter-spacing: 0.1em;
+    }
+
+    .gallery-item-meta {
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .gallery-item-title {
+      font-family: 'DepartureMono', monospace;
+      font-size: 0.78rem;
+      color: var(--white);
+    }
+
+    .gallery-item-right {
+      display: flex;
+      gap: 0.75rem;
+      align-items: baseline;
+    }
+
+    .gallery-item-category {
+      font-size: 0.65rem;
+      color: var(--gray);
+      font-family: 'DepartureMono', monospace;
+      letter-spacing: 0.08em;
+      opacity: 0.6;
+    }
+
+    .gallery-item-year {
+      font-size: 0.68rem;
+      color: var(--gray);
+    }
+
+    .gallery-back {
+      display: inline-block;
+      font-family: 'DepartureMono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: var(--gray);
+      text-decoration: none;
+      padding: 2rem 6vw;
+      border-top: 1px solid var(--border);
+      width: 100%;
+      transition: color 0.2s;
+    }
+
+    .gallery-back:hover { color: var(--white); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo"><span class="bracket">[</span><span class="logo-text">TAEHYUN</span><span class="bracket">]</span></a>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#projects">Projects</a></li>
+        <li><a href="index.html#connect">Connect</a></li>
+        <li><a href="blog.html">Blog↗</a></li>
+        <li><a href="gallery.html">Gallery↗</a></li>
+      </ul>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">○</button>
+    </div>
+  </nav>
+
+  <div class="gallery-header">
+    <h1>Gallery</h1>
+    <div class="gallery-filters">
+      <button class="gallery-filter active" data-filter="all">All</button>
+      <button class="gallery-filter" data-filter="photography">Photography</button>
+      <button class="gallery-filter" data-filter="art">Art</button>
+      <button class="gallery-filter" data-filter="design">Design</button>
+    </div>
+  </div>
+
+  <div class="gallery-grid" id="gallery-grid">
+
+    <!-- Photography -->
+
+    <div class="gallery-item" data-category="photography">
+      <div class="gallery-item-placeholder"><span>— add image —</span></div>
+      <div class="gallery-item-meta">
+        <span class="gallery-item-title">Untitled</span>
+        <span class="gallery-item-right">
+          <span class="gallery-item-category">Photography</span>
+          <span class="gallery-item-year">—</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="gallery-item" data-category="photography">
+      <div class="gallery-item-placeholder"><span>— add image —</span></div>
+      <div class="gallery-item-meta">
+        <span class="gallery-item-title">Untitled</span>
+        <span class="gallery-item-right">
+          <span class="gallery-item-category">Photography</span>
+          <span class="gallery-item-year">—</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="gallery-item" data-category="photography">
+      <div class="gallery-item-placeholder"><span>— add image —</span></div>
+      <div class="gallery-item-meta">
+        <span class="gallery-item-title">Untitled</span>
+        <span class="gallery-item-right">
+          <span class="gallery-item-category">Photography</span>
+          <span class="gallery-item-year">—</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="gallery-item" data-category="photography">
+      <div class="gallery-item-placeholder"><span>— add image —</span></div>
+      <div class="gallery-item-meta">
+        <span class="gallery-item-title">Untitled</span>
+        <span class="gallery-item-right">
+          <span class="gallery-item-category">Photography</span>
+          <span class="gallery-item-year">—</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Art -->
+
+    <div class="gallery-item" data-category="art">
+      <div class="gallery-item-placeholder"><span>— add image —</span></div>
+      <div class="gallery-item-meta">
+        <span class="gallery-item-title">Untitled</span>
+        <span class="gallery-item-right">
+          <span class="gallery-item-category">Art</span>
+          <span class="gallery-item-year">—</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="gallery-item" data-category="art">
+      <div class="gallery-item-placeholder"><span>— add image —</span></div>
+      <div class="gallery-item-meta">
+        <span class="gallery-item-title">Untitled</span>
+        <span class="gallery-item-right">
+          <span class="gallery-item-category">Art</span>
+          <span class="gallery-item-year">—</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="gallery-item" data-category="art">
+      <div class="gallery-item-placeholder"><span>— add image —</span></div>
+      <div class="gallery-item-meta">
+        <span class="gallery-item-title">Untitled</span>
+        <span class="gallery-item-right">
+          <span class="gallery-item-category">Art</span>
+          <span class="gallery-item-year">—</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="gallery-item" data-category="art">
+      <div class="gallery-item-placeholder"><span>— add image —</span></div>
+      <div class="gallery-item-meta">
+        <span class="gallery-item-title">Untitled</span>
+        <span class="gallery-item-right">
+          <span class="gallery-item-category">Art</span>
+          <span class="gallery-item-year">—</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Design -->
+
+    <div class="gallery-item" data-category="design">
+      <div class="gallery-item-placeholder"><span>— add image —</span></div>
+      <div class="gallery-item-meta">
+        <span class="gallery-item-title">Untitled</span>
+        <span class="gallery-item-right">
+          <span class="gallery-item-category">Design</span>
+          <span class="gallery-item-year">—</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="gallery-item" data-category="design">
+      <div class="gallery-item-placeholder"><span>— add image —</span></div>
+      <div class="gallery-item-meta">
+        <span class="gallery-item-title">Untitled</span>
+        <span class="gallery-item-right">
+          <span class="gallery-item-category">Design</span>
+          <span class="gallery-item-year">—</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="gallery-item" data-category="design">
+      <div class="gallery-item-placeholder"><span>— add image —</span></div>
+      <div class="gallery-item-meta">
+        <span class="gallery-item-title">Untitled</span>
+        <span class="gallery-item-right">
+          <span class="gallery-item-category">Design</span>
+          <span class="gallery-item-year">—</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="gallery-item" data-category="design">
+      <div class="gallery-item-placeholder"><span>— add image —</span></div>
+      <div class="gallery-item-meta">
+        <span class="gallery-item-title">Untitled</span>
+        <span class="gallery-item-right">
+          <span class="gallery-item-category">Design</span>
+          <span class="gallery-item-year">—</span>
+        </span>
+      </div>
+    </div>
+
+  </div>
+
+  <a href="index.html" class="gallery-back">← Back to portfolio</a>
+
+  <script>
+    (function () {
+      // Theme toggle
+      const btn = document.getElementById('theme-toggle');
+      if (btn) {
+        function applyTheme(light) {
+          document.body.classList.toggle('light', light);
+          btn.textContent = light ? '●' : '○';
+          localStorage.setItem('theme', light ? 'light' : 'dark');
+        }
+        btn.addEventListener('click', () => applyTheme(!document.body.classList.contains('light')));
+        if (localStorage.getItem('theme') === 'light') applyTheme(true);
+      }
+
+      // Category filter
+      const filters = document.querySelectorAll('.gallery-filter');
+      const items = document.querySelectorAll('.gallery-item');
+
+      filters.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filters.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const cat = btn.dataset.filter;
+          items.forEach(item => {
+            item.hidden = cat !== 'all' && item.dataset.category !== cat;
+          });
+        });
+      });
+
+      // Activate filter from URL hash (gallery.html#photography etc.)
+      const hash = location.hash.slice(1);
+      if (hash) {
+        const target = document.querySelector(`.gallery-filter[data-filter="${hash}"]`);
+        if (target) target.click();
+      }
+    }());
+  </script>
+
+</body>
+</html>

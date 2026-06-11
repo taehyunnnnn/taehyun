@@ -12,13 +12,16 @@
   <!-- ── NAV ── -->
   <nav>
     <a href="#" class="nav-logo"><span class="bracket">[</span><span class="logo-text">TAEHYUN</span><span class="bracket">]</span></a>
-    <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#interests">Interests</a></li>
-      <li><a href="#now">Now</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#connect">Connect</a></li>
-    </ul>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#connect">Connect</a></li>
+        <li><a href="blog.html">Blog↗</a></li>
+        <li><a href="gallery.html">Gallery↗</a></li>
+      </ul>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">○</button>
+    </div>
   </nav>
 
 
@@ -53,6 +56,7 @@
       </div>
       <div class="quote-img quote-img-right">
         <img src="assets/images/isaac_newton_pixel.png" alt="" />
+        <span class="quote-img-caption">[isaac newton]</span>
       </div>
       <p class="quote-text" id="quote-text">THE APPLE DOES NOT FALL FOR THOSE WHO WAIT. IT WAS NEVER GOING TO. GO CLIMB FOR IT.</p>
     </div>
@@ -72,15 +76,15 @@
       <div class="about-meta">
         <div class="meta-row">
           <span class="meta-key">Location</span>
-          <span class="meta-val">Toronto, Canada</span>
+          <span class="meta-val">Toronto, CAN</span>
         </div>
         <div class="meta-row">
-          <span class="meta-key">University</span>
-          <span class="meta-val">University of Toronto Scarborough — BSc Computer Science</span>
+          <span class="meta-key">Education</span>
+          <span class="meta-val"><a href="https://www.utsc.utoronto.ca" target="_blank" rel="noopener noreferrer">UTSC</a> — BSc Computer Science, '29</span>
         </div>
         <div class="meta-row">
-          <span class="meta-key">Grad Year</span>
-          <span class="meta-val">2029</span>
+          <span class="meta-key">Status</span>
+          <span class="meta-val">Open to internships</span>
         </div>
         <div class="meta-row">
           <span class="meta-key">Email</span>
@@ -89,105 +93,133 @@
       </div>
 
     </div>
-  </section>
 
-
-  <!-- ── INTERESTS ── -->
-  <section id="interests">
-    <p class="section-label">Interests</p>
-    <ul class="interests-list fade-in">
-      <li class="interest-item">
-        <span class="interest-type">Film</span>
-        <span class="interest-name">Slow Cinema</span>
-      </li>
-      <li class="interest-item">
-        <span class="interest-type">Music</span>
-        <span class="interest-name">Placeholder Artist</span>
-      </li>
-      <li class="interest-item">
-        <span class="interest-type">Sport</span>
-        <span class="interest-name">Placeholder Activity</span>
-      </li>
-      <li class="interest-item">
-        <span class="interest-type">Film</span>
-        <span class="interest-name">Placeholder</span>
-      </li>
-    </ul>
-  </section>
-
-
-  <!-- ── NOW ── -->
-  <section id="now">
-    <p class="section-label">Now</p>
-    <div class="now-clock" id="now-clock"></div>
-    <div class="now-list fade-in">
-
-      <div class="now-row">
-        <span class="now-dot"></span>
-        <span class="now-type">Building</span>
-        <span class="now-name">SchooledUp</span>
-        <span class="now-aside">AI-powered student platform — shipping 2026</span>
+    <div class="interests-carousel fade-in" id="interests">
+      <button class="carousel-btn carousel-prev" aria-label="Previous">&#8249;</button>
+      <div class="carousel-stage">
+        <div class="interest-card active">
+          <span class="interest-type">Creation</span>
+          <span class="interest-name">Design</span>
+          <span class="interest-desc">Architectural drafting, 3D modeling, and interior design using AutoCAD, SolidWorks, and SketchUp. <a href="gallery.html#design">See the gallery →</a></span>
+        </div>
+        <div class="interest-card">
+          <span class="interest-type">Creation</span>
+          <span class="interest-name">Visual Art</span>
+          <span class="interest-desc">Sketching, portraits, digital work, and photography — influenced by engraving aesthetics and old masters. <a href="gallery.html">See the gallery →</a></span>
+        </div>
+        <div class="interest-card">
+          <span class="interest-type">Creation</span>
+          <span class="interest-name">Short Film</span>
+          <span class="interest-desc">Part of a short film production — from concept through post. Drawn to slow cinema, long takes, and silence as narrative weight. <a href="https://www.youtube.com/watch?v=5AXww7liLMk" target="_blank" rel="noopener noreferrer">Watch on YouTube →</a></span>
+        </div>
+        <div class="interest-card">
+          <span class="interest-type">Writing</span>
+          <span class="interest-name">Blog</span>
+          <span class="interest-desc">Thoughts on tech, design, and whatever else is worth writing down. Coming soon. <a href="blog.html">Go to blog →</a></span>
+        </div>
+        <div class="interest-card">
+          <span class="interest-type">Hobbies</span>
+          <span class="interest-name">Badminton & Swimming</span>
+          <span class="interest-desc">Compete in men's doubles badminton. Swam competitively at OFSAA level. Past experience as a lifeguard and swim instructor.</span>
+        </div>
+        <div class="interest-card">
+          <span class="interest-type">Hobbies</span>
+          <span class="interest-name">Trumpet</span>
+          <span class="interest-desc">Placeholder — add how long you've been playing, style, or anything worth noting.</span>
+        </div>
       </div>
-
-      <div class="now-row">
-        <span class="now-dot"></span>
-        <span class="now-type">Learning</span>
-        <span class="now-name">Systems programming in C</span>
-        <span class="now-aside">Memory management, OS internals</span>
-      </div>
-
-      <div class="now-row">
-        <span class="now-dot"></span>
-        <span class="now-type">Reading</span>
-        <span class="now-name">Placeholder Book Title</span>
-        <span class="now-aside">Author Name</span>
-      </div>
-
-      <div class="now-row">
-        <span class="now-dot"></span>
-        <span class="now-type">Listening</span>
-        <span class="now-name">Placeholder Artist / Album</span>
-        <span class="now-aside">Genre or mood</span>
-      </div>
-
+      <button class="carousel-btn carousel-next" aria-label="Next">&#8250;</button>
     </div>
+
   </section>
 
 
   <!-- ── PROJECTS ── -->
   <section id="projects">
     <p class="section-label">Projects</p>
-    <div class="projects-list">
+    <div class="now-clock" id="now-clock"></div>
+    <div class="projects-list fade-in">
 
-      <a class="project-row" href="https://schooledup.app" target="_blank" rel="noopener noreferrer">
-        <span class="project-name">SchooledUp</span>
-        <span class="project-fill"></span>
-        <span class="project-year">2026</span>
-      </a>
+      <div class="project-group">
+        <span class="project-group-year">2026</span>
+        <div class="project-item">
+          <div class="project-row">
+            <span class="project-name">SchooledUp.app</span>
+            <span class="project-fill"></span>
+            <span class="project-toggle">+</span>
+          </div>
+          <div class="project-desc"><div class="project-desc-inner">
+            <p>AI-powered student platform. Co-founded and serving as CTO — leading product, architecture, and engineering.</p>
+            <a href="https://schooledup.app" target="_blank" rel="noopener noreferrer">Visit schooledup.app →</a>
+          </div></div>
+        </div>
+        <div class="project-item">
+          <div class="project-row">
+            <span class="project-name">Portfolio</span>
+            <span class="project-fill"></span>
+            <span class="project-toggle">+</span>
+          </div>
+          <div class="project-desc"><div class="project-desc-inner">
+            <p>This site — designed and built from scratch with plain HTML, CSS, and JavaScript. No frameworks.</p>
+          </div></div>
+        </div>
+      </div>
 
-      <a class="project-row" href="https://github.com/taehyunnnnn/twoPointInterferencePatternSimulator.processing" target="_blank" rel="noopener noreferrer">
-        <span class="project-name">Two Point Interference Simulator</span>
-        <span class="project-fill"></span>
-        <span class="project-year">2025</span>
-      </a>
+      <div class="project-group">
+        <span class="project-group-year">2025</span>
+        <div class="project-item">
+          <div class="project-row">
+            <span class="project-name">Two Point Interference Simulator</span>
+            <span class="project-fill"></span>
+            <span class="project-toggle">+</span>
+          </div>
+          <div class="project-desc"><div class="project-desc-inner">
+            <p>Interactive simulation of two-point wave interference patterns built in Processing. Visualises constructive and destructive interference in real time.</p>
+            <a href="https://github.com/taehyunnnnn/twoPointInterferencePatternSimulator.processing" target="_blank" rel="noopener noreferrer">View on GitHub →</a>
+          </div></div>
+        </div>
+        <div class="project-item">
+          <div class="project-row">
+            <span class="project-name">Tic Tac Toe</span>
+            <span class="project-fill"></span>
+            <span class="project-toggle">+</span>
+          </div>
+          <div class="project-desc"><div class="project-desc-inner">
+            <p>Classic Tic Tac Toe with an unbeatable AI opponent using the minimax algorithm, built in Java.</p>
+            <a href="https://github.com/taehyunnnnn/tictactoe.java" target="_blank" rel="noopener noreferrer">View on GitHub →</a>
+          </div></div>
+        </div>
+      </div>
 
-      <a class="project-row" href="https://github.com/taehyunnnnn/tictactoe.java" target="_blank" rel="noopener noreferrer">
-        <span class="project-name">Tic Tac Toe</span>
-        <span class="project-fill"></span>
-        <span class="project-year">2025</span>
-      </a>
+      <div class="project-group">
+        <span class="project-group-year">2024</span>
+        <div class="project-item">
+          <div class="project-row">
+            <span class="project-name">Tomb of the Mask</span>
+            <span class="project-fill"></span>
+            <span class="project-toggle">+</span>
+          </div>
+          <div class="project-desc"><div class="project-desc-inner">
+            <p>Recreation of the arcade mobile game Tomb of the Mask in Java — procedural maze generation, smooth movement, and increasing difficulty.</p>
+            <a href="https://github.com/taehyunnnnn/tombOfTheMask.java" target="_blank" rel="noopener noreferrer">View on GitHub →</a>
+          </div></div>
+        </div>
+      </div>
 
-      <a class="project-row" href="https://github.com/taehyunnnnn/tombOfTheMask.java" target="_blank" rel="noopener noreferrer">
-        <span class="project-name">Tomb of the Mask</span>
-        <span class="project-fill"></span>
-        <span class="project-year">2024</span>
-      </a>
-
-      <a class="project-row" href="https://github.com/taehyunnnnn/flappyBird.turing" target="_blank" rel="noopener noreferrer">
-        <span class="project-name">Flappy Bird</span>
-        <span class="project-fill"></span>
-        <span class="project-year">2023</span>
-      </a>
+      <div class="project-group">
+        <span class="project-group-year">2023</span>
+        <div class="project-item">
+          <div class="project-row">
+            <span class="project-name">Flappy Bird</span>
+            <span class="project-fill"></span>
+            <span class="project-toggle">+</span>
+          </div>
+          <div class="project-desc"><div class="project-desc-inner">
+            <p>Flappy Bird clone written in Turing — physics, collision detection, and score tracking.</p>
+            <a href="https://github.com/taehyunnnnn/flappyBird.turing" target="_blank" rel="noopener noreferrer">View on GitHub →</a>
+          </div></div>
+        </div>
+      </div>
 
     </div>
   </section>

@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Taehyun Im — Blog" />
+  <title>Taehyun Im — Blog</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* ── Post reading area ───────────────────────────────────── */
+    .blog-post {
+      max-width: 660px;
+      margin: 0 auto;
+      padding: 7rem 2rem 4rem;
+    }
+
+    .post-dateline {
+      font-family: 'DepartureMono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      color: var(--gray);
+      margin-bottom: 1.5rem;
+    }
+
+    .post-heading {
+      font-size: clamp(1.3rem, 2.5vw, 1.9rem);
+      font-weight: bold;
+      line-height: 1.25;
+      margin-bottom: 2.25rem;
+    }
+
+    .post-body {
+      font-size: 1rem;
+      line-height: 1.9;
+      color: var(--white);
+    }
+
+    .post-body p + p {
+      margin-top: 1.5em;
+    }
+
+    .drop-cap {
+      font-family: 'Retrogression', sans-serif;
+      font-size: 4.2em;
+      line-height: 0.75;
+      float: left;
+      margin-right: 0.1em;
+      margin-top: 0.06em;
+    }
+
+    /* ── Handwriting signature ───────────────────────────────── */
+    .blog-signature {
+      padding: 1rem 2rem 3.5rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .signature-gif {
+      display: block;
+      width: min(560px, 86vw);
+      opacity: 0.88;
+    }
+
+    .signature-placeholder {
+      width: min(560px, 86vw);
+      aspect-ratio: 5 / 1;
+      border: 1px dashed var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .signature-placeholder span {
+      font-family: 'DepartureMono', monospace;
+      font-size: 0.6rem;
+      color: var(--gray);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── Timeline ────────────────────────────────────────────── */
+    .blog-timeline {
+      border-top: 1px solid var(--border);
+      padding: 0 6vw 7rem;
+    }
+
+    .tl-group {
+      margin-top: 2.5rem;
+    }
+
+    .tl-group-head {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      padding-bottom: 0.2rem;
+    }
+
+    .tl-head-leader {
+      flex: 1;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0.2em;
+      min-width: 2rem;
+    }
+
+    .tl-year {
+      font-family: 'Retrogression', sans-serif;
+      font-size: 1.2rem;
+      font-weight: normal;
+      color: var(--white);
+    }
+
+    .tl-year.hidden {
+      visibility: hidden;
+    }
+
+    .tl-month {
+      font-family: 'DepartureMono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    .tl-entry {
+      position: relative;
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.7rem 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+      text-align: left;
+      color: inherit;
+      transition: background 0.15s;
+    }
+
+    .tl-entry:hover {
+      background: rgba(128, 128, 128, 0.07);
+    }
+
+    .tl-marker {
+      position: absolute;
+      left: -1.1rem;
+      font-size: 0.45rem;
+      color: transparent;
+      transition: color 0.15s;
+      line-height: 1;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .tl-entry.active .tl-marker {
+      color: var(--white);
+    }
+
+    .tl-title {
+      font-size: 0.92rem;
+      color: var(--gray);
+      flex-shrink: 0;
+      transition: color 0.15s;
+    }
+
+    .tl-entry.active .tl-title,
+    .tl-entry:hover .tl-title {
+      color: var(--white);
+    }
+
+    .tl-leader {
+      flex: 1;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0.2em;
+      min-width: 2rem;
+    }
+
+    .tl-day {
+      font-family: 'DepartureMono', monospace;
+      font-size: 0.68rem;
+      color: var(--gray);
+      flex-shrink: 0;
+      transition: color 0.15s;
+    }
+
+    .tl-entry.active .tl-day {
+      color: var(--white);
+    }
+
+    /* ── Back link ───────────────────────────────────────────── */
+    .blog-back {
+      display: block;
+      font-family: 'DepartureMono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: var(--gray);
+      text-decoration: none;
+      padding: 2rem 6vw;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      transition: color 0.2s;
+    }
+
+    .blog-back:hover { color: var(--white); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo"><span class="bracket">[</span><span class="logo-text">BLOG</span><span class="bracket">]</span></a>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#projects">Projects</a></li>
+        <li><a href="index.html#connect">Connect</a></li>
+        <li><a href="blog.html">Blog↗</a></li>
+        <li><a href="gallery.html">Gallery↗</a></li>
+      </ul>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">○</button>
+    </div>
+  </nav>
+
+  <article class="blog-post" id="blog-post"></article>
+
+  <div class="blog-signature">
+    <!--
+      Replace this placeholder with:
+        <img src="assets/images/signature.gif" alt="" class="signature-gif">
+      once you have the handwriting GIF ready.
+    -->
+    <div class="signature-placeholder"><span>— signature.gif —</span></div>
+  </div>
+
+  <div class="blog-timeline" id="blog-timeline"></div>
+
+  <a href="index.html" class="blog-back">← Back to portfolio</a>
+
+  <script>
+    /* ── Post data ─────────────────────────────────────────────
+       Add new posts at the top. Fields:
+         id      — unique slug (used in URL hash: blog.html#my-post)
+         title   — display title
+         year / month / day — publication date
+         content — HTML string
+    ─────────────────────────────────────────────────────────── */
+    const POSTS = [
+      {
+        id: 'welcome',
+        title: 'Welcome',
+        year: 2026, month: 6, day: 10,
+        content: `<p>This is where I write. No schedule, no theme, no algorithm to feed — just things that feel worth putting into words.</p><p>Expect notes on things I'm building, ideas I can't stop thinking about, and the occasional observation that has nowhere else to go.</p><p>Welcome.</p>`
+      },
+      {
+        id: 'not-finishing-things',
+        title: 'On not finishing things',
+        year: 2026, month: 6, day: 3,
+        content: `<p>I have seventeen half-finished projects on my desktop. Not counting the ones I've already archived out of embarrassment.</p><p>I used to think this was a discipline problem. Now I think it's something else — the interesting part of a thing is usually at the beginning, when it's still mostly potential.</p>`
+      },
+      {
+        id: 'three-things-this-week',
+        title: 'Three things I noticed this week',
+        year: 2026, month: 5, day: 28,
+        content: `<p>One: people walk faster when there's a destination they actually want to reach. Two: I read better in the morning than at night, which I've known for years and keep ignoring. Three: good code and good prose have the same quality — you stop noticing it.</p>`
+      },
+      {
+        id: 'perfectionism',
+        title: 'The problem with perfectionism',
+        year: 2026, month: 5, day: 19,
+        content: `<p>Perfectionism isn't really about quality. It's about control — the fantasy that if you just refine it long enough, nothing bad can happen to it.</p><p>The work that ships imperfect teaches you more than the work you never finish.</p>`
+      },
+      {
+        id: 'reading-subway',
+        title: 'Reading on the subway',
+        year: 2026, month: 5, day: 11,
+        content: `<p>Started carrying a book again instead of reaching for my phone at every stop. The difference is noticeable. Not in some grand self-improvement way — just that I arrive places with my head a little quieter.</p>`
+      },
+      {
+        id: 'deleted-twitter',
+        title: 'Why I deleted Twitter again',
+        year: 2026, month: 5, day: 4,
+        content: `<p>The same reasons as last time. And the time before that. At some point the pattern becomes the answer.</p>`
+      },
+      {
+        id: 'small-update-april',
+        title: 'Small update',
+        year: 2026, month: 4, day: 22,
+        content: `<p>Still here. Busy in a good way. Working on a few things I'm not ready to talk about yet. The weather finally turned.</p>`
+      },
+      {
+        id: 'thinking-about-lately',
+        title: 'Things I\'ve been thinking about lately',
+        year: 2026, month: 4, day: 14,
+        content: `<p>Why some interfaces feel like rooms and others feel like corridors. Whether attention is a skill or a resource. What it means to be good at something versus just fast at it.</p><p>No conclusions, just questions I keep returning to.</p>`
+      },
+      {
+        id: 'slow-down',
+        title: 'On learning to slow down',
+        year: 2026, month: 4, day: 3,
+        content: `<p>I've spent most of my life optimising for speed. Reading faster, typing faster, learning faster. Lately I've been wondering what I've been rushing toward.</p><p>Slowing down doesn't come naturally. It feels like falling behind at first.</p>`
+      },
+      {
+        id: 'sleep-schedule',
+        title: 'Sleep schedule is cooked',
+        year: 2026, month: 3, day: 27,
+        content: `<p>3am again. This has been going on for two weeks. I keep telling myself I'll fix it after the deadline, but deadlines are a renewable resource.</p>`
+      },
+      {
+        id: 'no-coffee',
+        title: 'Two weeks without coffee',
+        year: 2026, month: 3, day: 11,
+        content: `<p>Day fourteen. The headaches are gone. My afternoon slumps are still very much present, just no longer caffeinated into invisibility.</p><p>I don't know if this is better yet. I'll report back.</p>`
+      },
+      {
+        id: 'good-walk',
+        title: 'A good walk',
+        year: 2026, month: 2, day: 18,
+        content: `<p>Walked for two hours without a destination. This sounds simple and is increasingly rare. Somewhere around the hour mark something loosened in my chest that I hadn't noticed was tight.</p>`
+      },
+      {
+        id: 'starting-over',
+        title: 'Starting over (again)',
+        year: 2026, month: 2, day: 6,
+        content: `<p>Rebuilt my workspace from scratch. New folder structure, deleted tools I wasn't using, cleared the desktop. It's a form of procrastination but also sometimes the best way to start.</p>`
+      },
+      {
+        id: 'new-year-same-me',
+        title: 'New year, same me',
+        year: 2026, month: 1, day: 29,
+        content: `<p>I've never been good at resolutions. But I've been thinking about the difference between changing and improving — one implies the current version is wrong, the other doesn't.</p>`
+      },
+      {
+        id: 'january-update',
+        title: 'January update',
+        year: 2026, month: 1, day: 12,
+        content: `<p>Back from break. The transition back to routine is always harder than I expect it to be. Not bad, just slow. Like a computer starting up after a long sleep.</p>`
+      },
+      {
+        id: 'best-thing-ate',
+        title: 'The best thing I ate this year',
+        year: 2025, month: 12, day: 24,
+        content: `<p>A bowl of ramen at 1am after a very long day. The specifics don't matter — it's always about the timing.</p>`
+      },
+      {
+        id: 'looking-back-2025',
+        title: 'Looking back on 2025',
+        year: 2025, month: 12, day: 9,
+        content: `<p>A year of building things, breaking things, and occasionally finishing them. More good than bad, more growth than stagnation. The bar is low but I'll take it.</p><p>Writing this mostly for myself — a record that I showed up.</p>`
+      },
+      {
+        id: 'cant-stop-thinking',
+        title: 'Something I can\'t stop thinking about',
+        year: 2025, month: 11, day: 30,
+        content: `<p>The way a city changes when you know it well versus when you're new to it. Familiarity makes you efficient and blind in equal measure.</p>`
+      },
+      {
+        id: 'mid-semester',
+        title: 'Mid-semester thoughts',
+        year: 2025, month: 11, day: 15,
+        content: `<p>Tired in a specific way that only happens in November. Not burnout — more like a long exhale that hasn't finished yet. Counting weeks.</p>`
+      },
+      {
+        id: 'all-nighter',
+        title: 'Pulled an all-nighter, here are my thoughts',
+        year: 2025, month: 10, day: 28,
+        content: `<p>At 4am everything feels equally important and equally meaningless. The deadline was real. The work is done. I don't remember the last hour of it but it looks fine in the morning light.</p>`
+      },
+      {
+        id: 'on-being-20',
+        title: 'On being 20',
+        year: 2025, month: 10, day: 11,
+        content: `<p>Not as different as I expected. The number changed but I'm still the same person who forgets to reply to messages and overthinks everything before 9am.</p><p>Maybe that's the point — you don't become someone at a milestone, you just keep going.</p>`
+      },
+      {
+        id: 'first-week-october',
+        title: 'First week of October',
+        year: 2025, month: 10, day: 5,
+        content: `<p>The leaves are doing their thing. I always forget how quickly it happens — one week everything is green and then suddenly it isn't.</p>`
+      },
+      {
+        id: 'summers-over',
+        title: 'Summer\'s over',
+        year: 2025, month: 9, day: 1,
+        content: `<p>Back to school. The city readjusts — more people, more noise, more purpose in everyone's stride. I find it energising in a way that surprises me every year.</p>`
+      },
+      {
+        id: 'arrived',
+        title: 'Arrived',
+        year: 2025, month: 8, day: 20,
+        content: `<p>Moved into the new place. Three trips, two hours, one very long elevator wait. The walls are empty and the light is good.</p>`
+      },
+      {
+        id: 'hot-july',
+        title: 'A hot July',
+        year: 2025, month: 7, day: 14,
+        content: `<p>Thirty-four degrees and the air conditioning in the library is the best thing in my life right now. Reading, building, trying to stay out of the heat. Summer is long when you let it be.</p>`
+      }
+    ];
+
+    /* ── Helpers ────────────────────────────────────────────── */
+    const MONTHS = ['January','February','March','April','May','June',
+                    'July','August','September','October','November','December'];
+
+    function ord(n) {
+      if (n >= 11 && n <= 13) return n + 'th';
+      switch (n % 10) {
+        case 1: return n + 'st';
+        case 2: return n + 'nd';
+        case 3: return n + 'rd';
+        default: return n + 'th';
+      }
+    }
+
+    function sortedPosts() {
+      return [...POSTS].sort((a, b) => {
+        if (b.year !== a.year) return b.year - a.year;
+        if (b.month !== a.month) return b.month - a.month;
+        return b.day - a.day;
+      });
+    }
+
+    /* ── Render post ────────────────────────────────────────── */
+    function renderPost(post) {
+      // Inject drop cap on first text character of first paragraph
+      const content = post.content.replace(
+        /(<p[^>]*>)\s*(\S)/,
+        (_, tag, char) => `${tag}<span class="drop-cap">${char}</span>`
+      );
+      document.getElementById('blog-post').innerHTML = `
+        <p class="post-dateline">${MONTHS[post.month - 1]} ${ord(post.day)}, ${post.year}</p>
+        <h2 class="post-heading">${post.title}</h2>
+        <div class="post-body">${content}</div>
+      `;
+    }
+
+    /* ── Render timeline ────────────────────────────────────── */
+    function renderTimeline(activeId) {
+      const posts = sortedPosts();
+      const container = document.getElementById('blog-timeline');
+      let html = '';
+      let prevYear = null, prevMonth = null;
+
+      for (const post of posts) {
+        const newSection = post.year !== prevYear || post.month !== prevMonth;
+        if (newSection) {
+          if (prevMonth !== null) html += '</div>';
+          const showYear = post.year !== prevYear;
+          html += `
+            <div class="tl-group">
+              <div class="tl-group-head">
+                <span class="tl-year${showYear ? '' : ' hidden'}">${post.year}</span>
+                <span class="tl-head-leader"></span>
+                <span class="tl-month">${MONTHS[post.month - 1]}</span>
+              </div>`;
+          prevYear = post.year;
+          prevMonth = post.month;
+        }
+
+        const active = post.id === activeId;
+        html += `
+          <button class="tl-entry${active ? ' active' : ''}" data-id="${post.id}">
+            <span class="tl-marker">◆</span>
+            <span class="tl-title">${post.title}</span>
+            <span class="tl-leader"></span>
+            <span class="tl-day">${ord(post.day)}</span>
+          </button>`;
+      }
+
+      if (posts.length) html += '</div>';
+      container.innerHTML = html;
+
+      container.querySelectorAll('.tl-entry').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const post = POSTS.find(p => p.id === btn.dataset.id);
+          if (!post) return;
+          renderPost(post);
+          container.querySelectorAll('.tl-entry').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          document.getElementById('blog-post').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          history.replaceState(null, '', '#' + post.id);
+        });
+      });
+    }
+
+    /* ── Init ───────────────────────────────────────────────── */
+    (function () {
+      const hash = location.hash.slice(1);
+      const target = (hash && POSTS.find(p => p.id === hash)) || sortedPosts()[0];
+      renderPost(target);
+      renderTimeline(target.id);
+
+      // Theme toggle
+      const btn = document.getElementById('theme-toggle');
+      if (btn) {
+        function applyTheme(light) {
+          document.body.classList.toggle('light', light);
+          btn.textContent = light ? '●' : '○';
+          localStorage.setItem('theme', light ? 'light' : 'dark');
+        }
+        btn.addEventListener('click', () => applyTheme(!document.body.classList.contains('light')));
+        if (localStorage.getItem('theme') === 'light') applyTheme(true);
+      }
+    }());
+  </script>
+
+</body>
+</html>

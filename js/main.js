@@ -1,3 +1,31 @@
+// Theme toggle
+(function () {
+  const btn = document.getElementById('theme-toggle');
+  if (!btn) return;
+
+  function applyTheme(light) {
+    document.body.classList.toggle('light', light);
+    btn.textContent = light ? '●' : '○';
+    localStorage.setItem('theme', light ? 'light' : 'dark');
+    const heroImg = document.querySelector('.hero-img');
+    if (heroImg) {
+      heroImg.src = light
+        ? 'assets/images/water-lilies-and-japanese-bridge.jpg'
+        : 'assets/images/melancholia-i.jpg';
+    }
+    const artCredit = document.querySelector('.hero-art-credit');
+    if (artCredit) {
+      artCredit.textContent = light
+        ? '[Water Lilies and Japanese Bridge — Claude Monet, 1899]'
+        : '[Melencolia I — Albrecht Dürer, 1514]';
+    }
+    window.dispatchEvent(new Event('scroll'));
+  }
+
+  btn.addEventListener('click', () => applyTheme(!document.body.classList.contains('light')));
+
+  if (localStorage.getItem('theme') === 'light') applyTheme(true);
+}());
 
 // Projects: character scramble on scroll-in
 (function () {
@@ -125,6 +153,81 @@ window.addEventListener('scroll', () => {
   }
 }, { passive: true });
 
+// Project accordions
+document.querySelectorAll('.project-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.project-item.open').forEach(el => el.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  });
+});
+
+// Interests carousel
+(function () {
+  const cards    = Array.from(document.querySelectorAll('.interest-card'));
+  const prevBtn  = document.querySelector('.carousel-prev');
+  const nextBtn  = document.querySelector('.carousel-next');
+  const carousel = document.querySelector('.interests-carousel');
+  if (!cards.length || !prevBtn || !nextBtn) return;
+
+  let current  = 0;
+  let busy     = false;
+  let timer    = null;
+  let hovered  = false;
+
+  function goTo(idx, dir) {
+    if (busy) return;
+    busy = true;
+
+    const next     = (idx + cards.length) % cards.length;
+    const incoming = cards[next];
+
+    incoming.style.transition = 'none';
+    incoming.style.transform  = `translateX(${dir >= 0 ? '40px' : '-40px'})`;
+    incoming.style.opacity    = '0';
+    incoming.classList.add('active');
+
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      incoming.style.transition = '';
+      incoming.style.transform  = 'translateX(0)';
+      incoming.style.opacity    = '1';
+
+      cards[current].style.transition = '';
+      cards[current].style.transform  = `translateX(${dir >= 0 ? '-40px' : '40px'})`;
+      cards[current].style.opacity    = '0';
+
+      setTimeout(() => {
+        cards[current].classList.remove('active');
+        cards[current].style.transform = '';
+        cards[current].style.opacity   = '';
+        current = next;
+        busy    = false;
+      }, 280);
+    }));
+  }
+
+  function startTimer() {
+    clearInterval(timer);
+    timer = null;
+    if (!hovered) {
+      timer = setInterval(() => goTo(current + 1, 1), 6000);
+    }
+  }
+
+  function stopTimer() {
+    clearInterval(timer);
+    timer = null;
+  }
+
+  prevBtn.addEventListener('click', () => { goTo(current - 1, -1); startTimer(); });
+  nextBtn.addEventListener('click', () => { goTo(current + 1,  1); startTimer(); });
+
+  carousel.addEventListener('mouseenter', () => { hovered = true;  stopTimer(); });
+  carousel.addEventListener('mouseleave', () => { hovered = false; startTimer(); });
+
+  startTimer();
+}());
+
 // Fade-in on scroll
 const fadeEls = document.querySelectorAll('.fade-in');
 const fadeObserver = new IntersectionObserver((entries) => {
@@ -174,6 +277,7 @@ fadeEls.forEach(el => fadeObserver.observe(el));
   }
 
   function getExclusions() {
+    // Cached after first call — layout is stable once the hero renders
     if (exRect) return exRect;
     const hr = hero.getBoundingClientRect();
     const pad = Math.round(PX / 2);
@@ -195,6 +299,7 @@ fadeEls.forEach(el => fadeObserver.observe(el));
     const inZone = zones.some(ex => c >= ex.c1 && c < ex.c2 && r >= ex.r1 && r < ex.r2);
     const el = cells[r][c];
     el.style.transition = 'none';
+    // Cells inside name-letter zones render faintly so the name stays legible
     el.style.background = inZone ? 'rgba(245,245,245,0.18)' : 'rgb(245,245,245)';
     el.style.opacity = '1';
     requestAnimationFrame(() => {
@@ -207,6 +312,7 @@ fadeEls.forEach(el => fadeObserver.observe(el));
   let resizeTimer;
   window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(build, 200); });
 
+  // Bresenham's line algorithm — activates all cells between (c0,r0) and (c1,r1)
   function plotLine(c0, r0, c1, r1) {
     const dc = Math.abs(c1 - c0), dr = Math.abs(r1 - r0);
     const sc = c0 < c1 ? 1 : -1, sr = r0 < r1 ? 1 : -1;
@@ -318,7 +424,6 @@ fadeEls.forEach(el => fadeObserver.observe(el));
   textEl.innerHTML = words.map(w => `<span class="quote-word">${w}</span>`).join(' ');
   const spans = Array.from(textEl.querySelectorAll('.quote-word'));
   const total = spans.length;
-  spans.forEach(s => { s.style.color = '#333'; });
 
   // — image refs —
   const imgLeft  = section.querySelector('.quote-img-left');
@@ -348,8 +453,8 @@ fadeEls.forEach(el => fadeObserver.observe(el));
       const start = (i / (total - 1)) * 0.96;
       const end   = start + 0.04;
       const p = Math.max(0, Math.min(1, (textProgress - start) / (end - start)));
-      const v = Math.round(51 + p * 204);
-      span.style.color = `rgb(${v},${v},${v})`;
+      const brightness = Math.round(51 + p * 204); // dark-gray → white on black bg
+      span.style.color = `rgb(${brightness},${brightness},${brightness})`;
     });
   }
 
@@ -436,8 +541,8 @@ fadeEls.forEach(el => fadeObserver.observe(el));
   let cells = new Set();
   let stepTimer = null;
 
-  function place(pattern, oc, or_) {
-    pattern.forEach(([dc, dr]) => cells.add(`${oc + dc},${or_ + dr}`));
+  function place(pattern, oc, row) {
+    pattern.forEach(([dc, dr]) => cells.add(`${oc + dc},${row + dr}`));
   }
 
   function init() {
@@ -472,6 +577,7 @@ fadeEls.forEach(el => fadeObserver.observe(el));
     });
   }
 
+  // Conway's rules: dead cell + 3 neighbours → alive; live cell + 2–3 neighbours → survives
   function nextGen() {
     const counts = new Map();
     cells.forEach(k => {
